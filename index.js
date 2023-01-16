@@ -1,49 +1,18 @@
 import { ethers } from "ethers";
 
 (async () => {
-    const connection = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
-
-    const gasPrice = connection.getGasPrice();
-    // const wallet = ethers.Wallet.fromMnemonic("radar blur cabbage chef fix engine embark joy scheme fiction master release");
-    // const signer = wallet.connect(connection);
+    const provider = new ethers.providers.JsonRpcProvider("https://sparkling-crimson-friday.ethereum-goerli.discover.quiknode.pro/88d7c5c53b0f57831b56799f6b16e53b77cef31b/");
 
     var privateKey = '792b48bb0ae271453431c38015d00a5d88e1377a0fcf71efe01e7cdddf180813';
-    var wallet = new ethers.Wallet(privateKey);
-    const signer = wallet.connect(connection);
+    var wallet = new ethers.Wallet(privateKey, provider);
 
-    console.log(wallet.address);
+    const receiver = "0x1BaB8030249382A887F967FcAa7FE0be7B390728";
+    const amountToSend = "100";
+    const ERC20ABI = [{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"symbol","type":"string"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_address","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}];
 
-    const recipient = "0x1BaB8030249382A887F967FcAa7FE0be7B390728";
-    const tx = {
-        from: wallet.address,
-        to: recipient,
-        value: ethers.utils.parseUnits('0.001', 18),
-        gasPrice: gasPrice,
-        gasLimit: ethers.utils.hexlify(100000),
-        nonce: connection.getTransactionCount(wallet.address, 'latest')
-    };
-
-    const transaction = await signer.sendTransaction(tx);
-
-    console.log(transaction);
-    console.log(ethers.utils.parseUnits('0.001', 18));
-    console.log(gasPrice);
-
-    
-
-    // var privateKey = '0x0123456789012345678901234567890123456789012345678901234567890123';
-    // var wallet = new ethers.Wallet(privateKey);
-    // const signer = wallet.connect(wallet.providers = ethers.providers.getDefaultProvider());
-
-    // const recipient = "0x1BaB8030249382A887F967FcAa7FE0be7B390728";
-    // const tx = {
-    //     from: wallet.address,
-    //     to: recipient,
-    //     value: ethers.utils.parseUnits('0.001', 'ether'),
-    //     gasLimit: ethers.utils.hexlify(100000),
-    // };
-
-    // const transaction = await signer.sendTransaction(tx);
-
-    // console.log(transaction);
+    const USDC = new ethers.Contract(receiver, ERC20ABI, wallet);
+    await USDC.transfer(receiver, ethers.utils.parseEther(amountToSend, 18))
+    .then(function(tx){
+        console.log(tx)
+    })
 })();
